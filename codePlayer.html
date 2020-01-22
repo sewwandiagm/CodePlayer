@@ -1,0 +1,154 @@
+<!doctype html>
+<html>
+	<head>
+    	<title>Code Player</title>
+        <link href="jquery-ui/jquery-ui.css" rel="stylesheet">
+        
+        <style type="text/css">
+            body{
+                padding: 0;
+                margin: auto;
+            }
+			#btnPanel{
+                width: 100%;
+                background-color: #EEEEEE;
+                padding: 5px;
+                height: 30px
+            }
+
+            h3{
+                float: left;
+                font-weight: bold;
+                margin: 3px 5px;
+            }
+
+            #btns{
+                width: 233px;
+                margin: 0 auto
+            }
+
+            .btn{
+                float: left;
+                border: 1px solid grey;
+                padding: 6px;
+                border-right: none;
+                font-size: 90%;
+            }
+
+            #html{
+                border-top-left-radius: 4px;
+                border-bottom-left-radius: 4px;
+            }
+
+            #output{
+                border-top-right-radius: 4px;
+                border-bottom-right-radius: 4px;
+                border-right: 1px solid grey;
+            }
+
+            .active{
+                background-color:#e8f2ff;
+            }
+
+            .btnHighlight{
+                background-color:grey;
+            }
+
+            .devTxt{
+                float: left;
+                height: 888px;
+                width: 1889px;
+                border-left: none;
+            }
+
+            .devTxt{
+                display:none ;
+            }
+
+            .show{
+                display: inline-block;
+            }
+		</style>
+		
+		<script type="text/javascript" src="jquery-3.4.1.js"></script>		
+		<script src="jquery-ui/jquery-ui.js"></script>
+		
+    </head>
+    <body>
+
+        <div id="btnPanel">
+            <h3>Code Player</h3>
+            <div id="btns">
+                <button class="btn" id="html">HTML</button>
+                <button class="btn" id="css">CSS</button>
+                <button class="btn" id="js">JavaScript</button>
+                <button class="btn" id="output">Ouput</button>
+            </div>
+        </div>
+
+        <div id="devPanel">
+            <textarea class="devTxt" id="htmlTxt"><p id="paragraph">Hello World!</p></textarea>
+            <textarea class="devTxt" id="cssTxt">p { color: green;}</textarea>
+            <textarea class="devTxt" id="jsTxt">document.getElementById("paragraph").innerHTML = "Hello Rob!";</textarea>
+            <iframe class="devTxt" id="outputTxt"></iframe>
+        </div>
+
+		<script type="text/javascript">
+           updateHtmlAndCss();
+           $(".btn").hover(
+               function(){
+                    $(this).addClass("btnHighlight");
+               },
+               function(){
+                    $(this).removeClass("btnHighlight");
+               }
+           )
+
+            $(".btn").click(function(){               
+               $(this).removeClass("btnHighlight");
+               $(this).toggleClass("active");
+            
+               var idp="#"+$(this).attr("id")+"Txt";
+
+               $(idp).toggleClass("show");
+
+               var numbrOfPanels=$(".show").length;
+
+               var panelWidth=($(window).width()/numbrOfPanels)-10;
+
+               $(".show").width( panelWidth);
+            });
+
+            $(".show").width( ($(window).width()/2)-10);
+
+            $(".show").height( $(window).height()-$("#btnPanel").height()-15);
+
+            function updateOutput(htmltx,csstx,jstx){
+               
+                var html="<html><head><style type='text/css'>"+csstx+"</style></head><body>"+htmltx+"</body></html>";
+
+                $("#outputTxt").contents().find("html").html(html);
+                document.getElementById("outputTxt").contentWindow.eval(jstx);
+            }
+
+            $("#htmlTxt").on('change keyup paste', function() {
+                updateHtmlAndCss();
+            });
+
+            $("#cssTxt").on('change keyup paste', function() {
+                updateHtmlAndCss();
+            });
+
+            $("#jsTxt").on('change keyup paste', function() {
+                updateHtmlAndCss();
+            });
+
+            function updateHtmlAndCss(){
+                var html=$("#htmlTxt").val();
+                var css=$("#cssTxt").val();
+                var js=$("#jsTxt").val();
+                updateOutput(html,css,js);
+            }
+		</script>
+    </body>
+</html>
